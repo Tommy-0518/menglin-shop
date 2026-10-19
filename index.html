@@ -34,23 +34,36 @@ const body=x.body||'';
 const val=k=>(body.split('\n').find(line=>line.startsWith(k+'：'))||'').slice(k.length+1).trim();
 const name=x.title.slice(3),price=val('价格')||'价格请咨询',image=val('图片'),desc=val('介绍');
 
-return '<article class="item">'+(image.startsWith('https://')?'<img loading="lazy" src="'+esc(image)+'" style="width:100%;height:190px;object-fit:cover;border-radius:10px" alt="'+esc(name)+'">':'<div class="symbol">🪷</div>')+'<h3>'+esc(name)+'</h3><strong>'+esc(price)+'</strong><p>'+esc(desc)+'</p><a class="btn" href="#payment" data-name="'+esc(name)+'" data-price="'+esc(price)+'" onclick="chooseProduct(this)">下单</a></article>';
+return '<article class="item">'+(image.startsWith('https://')?'<img loading="lazy" src="'+esc(image)+'" style="width:100%;height:190px;object-fit:cover;border-radius:10px" alt="'+esc(name)+'">':'<div class="symbol">🪷</div>')+'<h3>'+esc(name)+'</h3><strong>'+esc(price)+'</strong><p>'+esc(desc)+'</p><a class="btn" href="#payment" data-name="'+esc(name)+'" data-price="'+esc(price)+'" onclick="addToCart(this)">加入购物车</a></article>';
 }).join(''):'<p>此分类暂时没有商品，欢迎 WhatsApp 咨询。</p>';};draw();
 }catch(e){el.textContent='商品暂时无法加载，请通过 WhatsApp 咨询。';}
 })();
-</script><section class="wrap" id="payment" style="background:white;border-radius:18px"><h2>选择付款方式</h2><p class="subtitle">请先通过 WhatsApp 确认库存、运费和应付总额，再付款</p><div style="max-width:650px;margin:auto;line-height:1.9">
-<label>商品名称 / 订单</label><input id="order" readonly placeholder="点击商品的「下单」自动填写" style="display:block;width:100%;padding:12px;margin:6px 0 15px">
-<label>下单数量</label><input id="qty" type="number" min="1" step="1" value="1" style="display:block;width:100%;padding:12px;margin:6px 0 15px"><div id="unitprice" style="font-size:14px;color:#596477">商品单价：请先选择商品</div><label>商品小计（RM，不含运费）</label><input id="payamount" type="number" min="0" step="0.01" readonly placeholder="选择商品后自动计算" style="display:block;width:100%;padding:12px;margin:6px 0 15px">
+</script><section class="wrap" id="payment" style="background:white;border-radius:18px"><h2>🛒 我的购物车 / 下单</h2><p class="subtitle">可以选购多种商品，系统自动计算每件商品的价格与数量</p><div style="max-width:680px;margin:auto;line-height:1.9">
+<div id="cartItems" aria-live="polite">购物车目前没有商品。请先在上方选择商品。</div>
+<div style="padding:14px;background:#f5eddb;border-radius:10px;margin:16px 0"><strong>商品总额（不含运费）：<span id="cartTotal">RM 0.00</span></strong><p style="font-size:13px;margin:4px 0">运费及库存请先向店家确认；商品总额不代表最终应付金额。</p></div>
 <label>付款方式</label><select id="paymethod" style="display:block;width:100%;padding:12px;margin:6px 0 15px"><option>Public Bank 银行转账</option><option>Touch 'n Go eWallet / DuitNow QR</option></select>
 <div id="bank" style="padding:15px;background:#f5eddb;border-radius:10px"><strong>Public Bank Bhd.</strong><div>收款名称：Moonleng Fortune Worlds</div><div>账户号码：<strong>317 447 0115</strong></div></div>
 <div id="tng" style="display:none;padding:15px;background:#f5eddb;border-radius:10px"><strong>Touch 'n Go eWallet / DuitNow QR</strong><div>收款人：LEE MOON LENG</div><div>请先向店家索取 QR 付款码，扫码时核对收款人。</div></div>
-<p style="font-size:14px;color:#596477">付款完成后点击 WhatsApp 按钮，再手动附上付款收据截图。店家核对实际到账后才确认订单。不要发送 OTP、密码或银行卡完整资料。</p>
-<a id="receiptA" class="btn" target="_blank" rel="noopener">发送收据：012-293-0618</a> <a id="receiptB" class="btn" target="_blank" rel="noopener">发送收据：018-257-2649</a></div></section>
+<p style="font-size:14px;color:#596477">请先发送订单确认库存和运费，再按确认金额付款。付款后打开 WhatsApp，附上收据截图。店家核对到账后才确认订单。</p>
+<a id="receiptA" class="btn" target="_blank" rel="noopener">WhatsApp 下单 / 发收据 012-293-0618</a> <a id="receiptB" class="btn" target="_blank" rel="noopener">WhatsApp 下单 / 发收据 018-257-2649</a></div></section>
 <script>
-let currentUnitPrice=null;
-function updateOrderTotal(){const q=document.getElementById('qty'),a=document.getElementById('payamount'),u=document.getElementById('unitprice');let quantity=Number(q.value);if(!Number.isInteger(quantity)||quantity<1){quantity=1;q.value='1'}if(currentUnitPrice!==null){a.value=(currentUnitPrice*quantity).toFixed(2);u.textContent='商品单价：RM '+currentUnitPrice.toFixed(2)+' × '+quantity+' 件（不含运费）'}else{a.value='';u.textContent='商品价格请向店家确认'}a.dispatchEvent(new Event('input'))}
-function chooseProduct(el){const n=document.getElementById('order');n.value=el.dataset.name||'';const raw=el.dataset.price||'';const match=raw.match(/RM\s*([0-9]+(?:\.[0-9]{1,2})?)/i);currentUnitPrice=match?Number(match[1]):null;document.getElementById('qty').value='1';n.dispatchEvent(new Event('input'));updateOrderTotal();document.getElementById('payment').scrollIntoView({behavior:'smooth',block:'start'})}
-document.getElementById('qty').addEventListener('input',updateOrderTotal);
-</script><script>(function(){const m=document.getElementById('paymethod'),o=document.getElementById('order'),a=document.getElementById('payamount'),q=document.getElementById('qty');function upd(){document.getElementById('bank').style.display=m.selectedIndex===0?'block':'none';document.getElementById('tng').style.display=m.selectedIndex===1?'block':'none';const msg='你好，我在夢林命理天地下单。\n商品：'+(o.value||'待选择')+'\n数量：'+q.value+'\n商品小计（不含运费）：RM '+(a.value||'待确认')+'\n付款方式：'+m.value+'\n请核对订单、运费及付款收据。';document.getElementById('receiptA').href='https://wa.me/60122930618?text='+encodeURIComponent(msg);document.getElementById('receiptB').href='https://wa.me/60182572649?text='+encodeURIComponent(msg)}[m,o,a,q].forEach(x=>x.addEventListener('input',upd));upd()})();</script><section class="about wrap" id="about"><h2>关于夢林命理天地</h2><p>欢迎来到夢林命理天地。我们正在整理佛教及宗教用品的线上展示目录，希望让马来西亚顾客更方便地了解商品和咨询选购。详细商品资料、付款方式和配送安排请与店家确认。</p></section>
+const shopCart={};
+const money=n=>'RM '+n.toFixed(2);
+const cartEscape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function addToCart(el){const name=el.dataset.name||'',raw=el.dataset.price||'',match=raw.match(/RM\s*([0-9]+(?:\.[0-9]{1,2})?)/i);if(!name)return;if(!shopCart[name])shopCart[name]={name,price:match?Number(match[1]):null,qty:0};shopCart[name].qty++;renderCart();document.getElementById('payment').scrollIntoView({behavior:'smooth',block:'start'})}
+function changeCartItem(name,delta){if(!shopCart[name])return;shopCart[name].qty+=delta;if(shopCart[name].qty<=0)delete shopCart[name];renderCart()}
+function renderCart(){const list=Object.values(shopCart),target=document.getElementById('cartItems');let total=0,unknown=false;
+target.innerHTML=list.length?list.map(item=>{if(item.price===null)unknown=true;else total+=item.price*item.qty;return '<div style="padding:12px 0;border-bottom:1px solid #ddd"><strong>'+cartEscape(item.name)+'</strong><div>单价：'+(item.price===null?'请咨询店家':money(item.price))+'</div><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><button type="button" data-name="'+cartEscape(item.name)+'" data-delta="-1" class="cart-change" style="padding:5px 14px">−</button><strong>'+item.qty+' 件</strong><button type="button" data-name="'+cartEscape(item.name)+'" data-delta="1" class="cart-change" style="padding:5px 14px">+</button><span>小计：'+(item.price===null?'待确认':money(item.price*item.qty))+'</span></div></div>'}).join(''):'购物车目前没有商品。请先在上方选择商品。';
+document.getElementById('cartTotal').textContent=unknown?money(total)+' + 待确认价格':money(total);
+const method=document.getElementById('paymethod').value;
+const details=list.map((item,i)=>(i+1)+'. '+item.name+' × '+item.qty+'，单价：'+(item.price===null?'待确认':money(item.price))+'，小计：'+(item.price===null?'待确认':money(item.price*item.qty))).join('\n');
+const msg='你好，我在夢林命理天地下单。\n'+(details||'购物车暂时没有商品')+'\n商品总额（不含运费）：'+money(total)+(unknown?'（另有待确认商品）':'')+'\n付款方式：'+method+'\n请确认库存、运费及最终应付金额。若已付款，我会另附收据截图。';
+document.getElementById('receiptA').href='https://wa.me/60122930618?text='+encodeURIComponent(msg);
+document.getElementById('receiptB').href='https://wa.me/60182572649?text='+encodeURIComponent(msg);
+}
+document.getElementById('cartItems').addEventListener('click',e=>{const b=e.target.closest('button.cart-change');if(b)changeCartItem(b.dataset.name,Number(b.dataset.delta))});
+document.getElementById('paymethod').addEventListener('change',e=>{document.getElementById('bank').style.display=e.target.selectedIndex===0?'block':'none';document.getElementById('tng').style.display=e.target.selectedIndex===1?'block':'none';renderCart()});
+renderCart();
+</script><section class="about wrap" id="about"><h2>关于夢林命理天地</h2><p>欢迎来到夢林命理天地。我们正在整理佛教及宗教用品的线上展示目录，希望让马来西亚顾客更方便地了解商品和咨询选购。详细商品资料、付款方式和配送安排请与店家确认。</p></section>
 <section class="wrap contact" id="contact"><h2>联系我们</h2><p>欢迎通过以下 WhatsApp 号码咨询商品、库存、价格及配送。</p><a class="btn" href="https://wa.me/60122930618?text=%E4%BD%A0%E5%A5%BD%EF%BC%8C%E6%88%91%E6%83%B3%E5%92%A8%E8%AF%A2%E5%A4%A2%E6%9E%97%E5%91%BD%E7%90%86%E5%A4%A9%E5%9C%B0%E7%9A%84%E5%95%86%E5%93%81%E3%80%82">WhatsApp 012-293-0618</a> <a class="btn" href="https://wa.me/60182572649?text=%E4%BD%A0%E5%A5%BD%EF%BC%8C%E6%88%91%E6%83%B3%E5%92%A8%E8%AF%A2%E5%A4%A2%E6%9E%97%E5%91%BD%E7%90%86%E5%A4%A9%E5%9C%B0%E7%9A%84%E5%95%86%E5%93%81%E3%80%82">WhatsApp 018-257-2649</a></section></main>
 <footer>© 2026 夢林命理天地 · Malaysia · 网站展示版</footer></body></html>
