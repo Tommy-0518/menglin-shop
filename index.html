@@ -14,22 +14,28 @@
 <div class="item"><div class="symbol">🏮</div><h3>供灯与供佛用品</h3><p>供灯及供奉配件</p></div>
 <div class="item"><div class="symbol">📖</div><h3>法器与佛经</h3><p>法器、佛经及其他用品</p></div>
 </div><div class="notice">商品图片、售价和库存正在整理中。请先联系店家确认是否有售；本页分类不代表所有商品均有现货。</div></section>
-<section class="wrap" id="shop"><h2>商品目录</h2><p class="subtitle">由店家自行添加、修改商品</p><div id="catalog" class="grid"><p>商品加载中…</p></div></section>
+<section class="wrap" id="shop"><h2>商品目录</h2><p class="subtitle">由店家自行添加、修改商品</p><div id="filters" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:24px"></div><div id="catalog" class="grid"><p>商品加载中…</p></div></section>
 <script>
 (async()=>{
-const el=document.getElementById('catalog');
+const el=document.getElementById('catalog');const filters=document.getElementById('filters');
 try{
 const r=await fetch('https://api.github.com/repos/Tommy-0518/menglin-shop/issues?state=open&per_page=100');
 if(!r.ok)throw Error('load');
 const items=(await r.json()).filter(x=>!x.pull_request&&x.title.startsWith('商品：'));
 const esc=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-el.innerHTML=items.length?items.map(x=>{
+const categories=['全部','佛像','佛珠','佛牌','香品','供佛用品','佛经法器','风水用品','其他用品'];
+let selected='全部';
+const draw=()=>{
+filters.innerHTML=categories.map(c=>'<button type="button" data-cat="'+c+'" style="border:1px solid #c8ac76;border-radius:24px;padding:9px 13px;background:'+(selected===c?'#d8b46d':'white')+';cursor:pointer">'+c+'</button>').join('');
+filters.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{selected=b.dataset.cat;draw()}));
+const shown=items.filter(x=>{const line=(x.body||'').split('\n').find(s=>s.startsWith('分类：'))||'';const cat=line.slice(3).trim()||'其他用品';return selected==='全部'||cat===selected});
+el.innerHTML=shown.length?shown.map(x=>{
 const body=x.body||'';
 const val=k=>(body.split('\n').find(line=>line.startsWith(k+'：'))||'').slice(k.length+1).trim();
 const name=x.title.slice(3),price=val('价格')||'价格请咨询',image=val('图片'),desc=val('介绍');
 const msg=encodeURIComponent('你好，我想订购：'+name+'，请问有货吗？');
 return '<article class="item">'+(image.startsWith('https://')?'<img loading="lazy" src="'+esc(image)+'" style="width:100%;height:190px;object-fit:cover;border-radius:10px" alt="'+esc(name)+'">':'<div class="symbol">🪷</div>')+'<h3>'+esc(name)+'</h3><strong>'+esc(price)+'</strong><p>'+esc(desc)+'</p><a class="btn" target="_blank" rel="noopener" href="https://wa.me/60122930618?text='+msg+'">WhatsApp 订购</a></article>';
-}).join(''):'<p>商品即将上架，欢迎 WhatsApp 咨询。</p>';
+}).join(''):'<p>此分类暂时没有商品，欢迎 WhatsApp 咨询。</p>';};draw();
 }catch(e){el.textContent='商品暂时无法加载，请通过 WhatsApp 咨询。';}
 })();
 </script><section class="about wrap" id="about"><h2>关于夢林命理天地</h2><p>欢迎来到夢林命理天地。我们正在整理佛教及宗教用品的线上展示目录，希望让马来西亚顾客更方便地了解商品和咨询选购。详细商品资料、付款方式和配送安排请与店家确认。</p></section>
