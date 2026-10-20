@@ -59,7 +59,7 @@ document.getElementById('cartTotal').textContent=unknown?money(total)+' + 待确
 const method=document.getElementById('paymethod').value;
 const details=list.map((item,i)=>(i+1)+'. '+item.name+' × '+item.qty+'，单价：'+(item.price===null?'待确认':money(item.price))+'，小计：'+(item.price===null?'待确认':money(item.price*item.qty))).join('\n');
 const customerFields=[['收货人', 'customerName'],['联系电话','customerPhone'],['收货地址','customerAddress'],['邮政编码','customerPostcode'],['城市','customerCity'],['州属','customerState'],['备注','customerNote']];
-const customerDetails=customerFields.map(([label,id])=>label+'：'+(document.getElementById(id).value.trim()||'未填写')).join('\\n');
+const customerDetails=customerFields.map(([label,id])=>label+'：'+(document.getElementById(id).value.trim()||'未填写')).join('\n');
 const msg='你好，我在夢林命理天地下单。\n'+(details||'购物车暂时没有商品')+'\n商品总额（不含运费）：'+money(total)+(unknown?'（另有待确认商品）':'')+'\n收货资料：\n'+customerDetails+'\n付款方式：'+method+'\n请确认库存、运费及最终应付金额。若已付款，我会另附收据截图。';
 document.getElementById('receiptA').href='https://wa.me/60122930618?text='+encodeURIComponent(msg);
 document.getElementById('receiptB').href='https://wa.me/60182572649?text='+encodeURIComponent(msg);
