@@ -32,9 +32,9 @@ const shown=items.filter(x=>{const line=(x.body||'').split('\n').find(s=>s.start
 el.innerHTML=shown.length?shown.map(x=>{
 const body=x.body||'';
 const val=k=>(body.split('\n').find(line=>line.startsWith(k+'：'))||'').slice(k.length+1).trim();
-const name=x.title.slice(3),price=val('价格')||'价格请咨询',image=val('图片'),desc=val('介绍');
+const name=x.title.slice(3),price=val('价格')||'价格请咨询',image=val('图片'),image2=val('图片2'),desc=val('介绍');
 
-return '<article class="item">'+(image.startsWith('https://')?'<img class="zoomable-product" title="点击放大图片" tabindex="0" role="button" loading="lazy" src="'+esc(image)+'" style="width:100%;height:190px;object-fit:cover;border-radius:10px" alt="'+esc(name)+'">':'<div class="symbol">🪷</div>')+'<h3>'+esc(name)+'</h3><strong>'+esc(price)+'</strong><p>'+esc(desc)+'</p><a class="btn" href="#payment" data-name="'+esc(name)+'" data-price="'+esc(price)+'" onclick="addToCart(this)">加入购物车</a></article>';
+return '<article class="item">'+(image.startsWith('https://')?'<div style="display:flex;gap:6px;align-items:stretch">'+[image,image2].filter(url=>url.startsWith('https://')).map((url,i)=>'<img class="zoomable-product" title="点击放大图片 '+(i+1)+'" tabindex="0" role="button" loading="lazy" src="'+esc(url)+'" style="width:'+(image2.startsWith('https://')?'calc(50% - 3px)':'100%')+';height:190px;object-fit:cover;border-radius:10px;cursor:zoom-in" alt="'+esc(name)+' 图片'+(i+1)+'">').join('')+'</div>':'<div class="symbol">🪷</div>')+'<h3>'+esc(name)+'</h3><strong>'+esc(price)+'</strong><p>'+esc(desc)+'</p><a class="btn" href="#payment" data-name="'+esc(name)+'" data-price="'+esc(price)+'" onclick="addToCart(this)">加入购物车</a></article>';
 }).join(''):'<p>此分类暂时没有商品，欢迎 WhatsApp 咨询。</p>';};draw();
 }catch(e){el.textContent='商品暂时无法加载，请通过 WhatsApp 咨询。';}
 })();
