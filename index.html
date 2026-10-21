@@ -3,7 +3,7 @@
 <title>夢林命理天地 | 马来西亚佛教及宗教用品</title><meta name="description" content="夢林命理天地 — 马来西亚佛教及宗教用品展示，欢迎 WhatsApp 咨询。">
 <style>
 :root{--navy:#142238;--gold:#d8b46d;--cream:#fbf8f0}*{box-sizing:border-box}body{margin:0;background:var(--cream);font-family:system-ui,-apple-system,"Noto Sans SC",sans-serif;color:#243044}a{color:inherit}header{background:var(--navy);color:white;padding:17px 6%;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}header strong{font-size:21px;letter-spacing:2px}nav{display:flex;gap:16px;font-size:13px}nav a{text-decoration:none}.hero{background:linear-gradient(125deg,#15263f,#34465a);color:white;text-align:center;padding:76px 18px 82px}.eyebrow{letter-spacing:4px;color:var(--gold);font-size:12px}.hero h1{font-size:clamp(36px,8vw,65px);margin:17px 0 12px;letter-spacing:4px}.hero p{color:#e4e8ed;line-height:1.9}.btn{display:inline-block;background:var(--gold);color:#1c2a3a;border:0;border-radius:40px;padding:13px 26px;text-decoration:none;font-weight:700;margin-top:20px}.btn.secondary{background:transparent;border:1px solid var(--gold);color:var(--gold)}.wrap{max-width:1050px;margin:auto;padding:55px 20px}h2{text-align:center;font-size:27px;margin:0 0 8px}.subtitle{text-align:center;color:#667080;margin:0 0 35px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.item{background:white;border:1px solid #ece5d7;border-radius:16px;padding:25px 15px;text-align:center;box-shadow:0 4px 16px #1422380a}.symbol{font-size:38px}.item h3{margin:12px 0 7px}.item p{font-size:13px;color:#6d7380;line-height:1.7}.notice{background:#f2e9d7;border-radius:14px;padding:18px;text-align:center;line-height:1.9;margin-top:30px}.about{background:#fff}.about p{line-height:2;max-width:700px;margin:20px auto;text-align:center;color:#566171}.contact{text-align:center;background:#142238;color:white}.contact p{color:#dce3eb;line-height:1.9}footer{text-align:center;padding:22px;background:#0d1727;color:#b9c1cb;font-size:12px}@media(max-width:650px){.grid{grid-template-columns:repeat(2,1fr);gap:10px}.item{padding:20px 10px}.item h3{font-size:16px}.hero{padding:60px 15px}nav{gap:12px}}
-</style></head><body>
+.shop-search{max-width:650px;margin:0 auto 22px}.shop-search label{display:block;font-weight:700;margin-bottom:9px}.shop-search-row{display:flex;gap:8px}.shop-search input{flex:1;min-width:0;padding:13px 15px;border:1px solid #c8ac76;border-radius:12px;font-size:16px;background:white}.shop-search button{padding:0 17px;border:1px solid #c8ac76;border-radius:12px;background:#f2e9d7;cursor:pointer}.shop-search p{margin:8px 0 0;font-size:13px;color:#667080;text-align:center}</style></head><body>
 <header><strong>夢林命理天地</strong><nav><a href="#products">商品分类</a><a href="#about">关于我们</a><a href="#contact">联系我们</a></nav></header>
 <section class="hero"><div class="eyebrow">MENG LIN · MALAYSIA</div><h1>夢林命理天地</h1><p>佛教用品 · 宗教用品 · 传统文化用品<br>用心展示，欢迎咨询</p><a class="btn" href="#products">浏览商品分类 ↓</a></section>
 <main><section class="wrap" id="products"><h2>商品分类</h2><p class="subtitle">欢迎咨询商品款式、价格及库存</p><div class="grid">
@@ -14,7 +14,7 @@
 <div class="item"><div class="symbol">🏮</div><h3>供灯与供佛用品</h3><p>供灯及供奉配件</p></div>
 <div class="item"><div class="symbol">📖</div><h3>法器与佛经</h3><p>法器、佛经及其他用品</p></div>
 </div><div class="notice">商品图片、售价和库存正在整理中。请先联系店家确认是否有售；本页分类不代表所有商品均有现货。</div></section>
-<section class="wrap" id="shop"><h2>商品目录</h2><p class="subtitle">由店家自行添加、修改商品</p><div id="filters" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:24px"></div><div id="catalog" class="grid"><p>商品加载中…</p></div></section>
+<section class="wrap" id="shop"><h2>商品目录</h2><p class="subtitle">由店家自行添加、修改商品</p><div class="shop-search"><label for="productSearch">🔎 搜索商品</label><div class="shop-search-row"><input id="productSearch" type="search" placeholder="输入商品名称、用途或价格，例如：艾草、塔香、RM10" autocomplete="off" aria-controls="catalog"><button type="button" id="clearProductSearch">清除</button></div><p id="searchResultCount" role="status" aria-live="polite"></p></div><div id="filters" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:24px"></div><div id="catalog" class="grid"><p>商品加载中…</p></div></section>
 <script>
 (async()=>{
 const el=document.getElementById('catalog');const filters=document.getElementById('filters');
@@ -24,18 +24,19 @@ if(!r.ok)throw Error('load');
 const items=(await r.json()).filter(x=>!x.pull_request&&x.title.startsWith('商品：'));
 const esc=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const categories=['全部','佛像','佛珠','佛牌','香品','供佛用品','佛经法器','风水用品','其他用品'];
-let selected='全部';
+let selected='全部';const searchInput=document.getElementById('productSearch');const clearSearch=document.getElementById('clearProductSearch');const resultCount=document.getElementById('searchResultCount');
 const draw=()=>{
 filters.innerHTML=categories.map(c=>'<button type="button" data-cat="'+c+'" style="border:1px solid #c8ac76;border-radius:24px;padding:9px 13px;background:'+(selected===c?'#d8b46d':'white')+';cursor:pointer">'+c+'</button>').join('');
 filters.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{selected=b.dataset.cat;draw()}));
-const shown=items.filter(x=>{const line=(x.body||'').split('\n').find(s=>s.startsWith('分类：'))||'';const cat=line.slice(3).trim()||'其他用品';return selected==='全部'||cat===selected});
+const shown=items.filter(x=>{const line=(x.body||'').split('\n').find(s=>s.startsWith('分类：'))||'';const cat=line.slice(3).trim()||'其他用品';const q=searchInput.value.trim().toLocaleLowerCase();const match=!q||(x.title+' '+(x.body||'')).toLocaleLowerCase().includes(q);return (selected==='全部'||cat===selected)&&match});
+resultCount.textContent='找到 '+shown.length+' 件商品';
 el.innerHTML=shown.length?shown.map(x=>{
 const body=x.body||'';
 const val=k=>(body.split('\n').find(line=>line.startsWith(k+'：'))||'').slice(k.length+1).trim();
 const name=x.title.slice(3),price=val('价格')||'价格请咨询',image=val('图片'),image2=val('图片2'),desc=val('介绍');
 
 return '<article class="item">'+(image.startsWith('https://')?'<div style="display:flex;gap:6px;align-items:stretch">'+[image,image2].filter(url=>url.startsWith('https://')).map((url,i)=>'<img class="zoomable-product" title="点击放大图片 '+(i+1)+'" tabindex="0" role="button" loading="lazy" src="'+esc(url)+'" style="width:'+(image2.startsWith('https://')?'calc(50% - 3px)':'100%')+';height:190px;object-fit:cover;border-radius:10px;cursor:zoom-in" alt="'+esc(name)+' 图片'+(i+1)+'">').join('')+'</div>':'<div class="symbol">🪷</div>')+'<h3>'+esc(name)+'</h3><strong>'+esc(price)+'</strong><p>'+esc(desc)+'</p><a class="btn" href="#payment" data-name="'+esc(name)+'" data-price="'+esc(price)+'" onclick="addToCart(this)">加入购物车</a></article>';
-}).join(''):'<p>此分类暂时没有商品，欢迎 WhatsApp 咨询。</p>';};draw();
+}).join(''):'<p>没有找到符合条件的商品，请换个关键词或选择「全部」。</p>';};searchInput.addEventListener('input',draw);clearSearch.addEventListener('click',()=>{searchInput.value='';selected='全部';draw();searchInput.focus()});draw();
 }catch(e){el.textContent='商品暂时无法加载，请通过 WhatsApp 咨询。';}
 })();
 </script><section class="wrap" id="payment" style="background:white;border-radius:18px"><h2>🛒 我的购物车 / 下单</h2><p class="subtitle">可以选购多种商品，系统自动计算每件商品的价格与数量</p><div style="max-width:680px;margin:auto;line-height:1.9">
